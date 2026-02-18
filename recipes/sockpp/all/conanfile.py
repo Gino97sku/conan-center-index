@@ -9,7 +9,6 @@ required_conan_version = ">=2.4"
 class SockppConan(ConanFile):
     name = "sockpp"
     package_type = "library"
-
     license = "BSD-3-Clause"
     homepage = "https://github.com/fpagliughi/sockpp"
     url = "https://github.com/conan-io/conan-center-index"
@@ -20,7 +19,6 @@ class SockppConan(ConanFile):
         "shared": [True, False],
         "fPIC": [True, False],
     }
-
     default_options = {
         "shared": False,
         "fPIC": True,
@@ -31,14 +29,13 @@ class SockppConan(ConanFile):
     def source(self):
         get(self, **self.conan_data["sources"][self.version], strip_root=True)
 
-
     def layout(self):
         cmake_layout(self, src_folder="src")
 
     def generate(self):
         tc = CMakeToolchain(self)
-        tc.variables["SOCKPP_BUILD_SHARED"] = self.options.shared
-        tc.variables["SOCKPP_BUILD_STATIC"] = not self.options.shared
+        tc.cache_variables["SOCKPP_BUILD_SHARED"] = self.options.shared
+        tc.cache_variables["SOCKPP_BUILD_STATIC"] = not self.options.shared
         tc.generate()
 
     def validate(self):
@@ -54,7 +51,6 @@ class SockppConan(ConanFile):
         cmake.install()
         copy(self, "LICENSE", src=self.source_folder, dst=os.path.join(self.package_folder, "licenses"))
         rmdir(self, os.path.join(self.package_folder, "lib", "cmake"))
-
 
     def package_info(self):
         self.cpp_info.set_property("cmake_target_name", "Sockpp::sockpp" if self.options.shared else "Sockpp::sockpp-static")
